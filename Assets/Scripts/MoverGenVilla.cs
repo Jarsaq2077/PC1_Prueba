@@ -7,7 +7,7 @@ public class GenVillalobos : MonoBehaviour
     public float JumpForce;
     public int vidas;
     private bool EnSuelo;
-    //private Animator Animator;
+    private Animator Animator;
     private Rigidbody2D Rigidbody2D;
     private float Horizontal;
     public float moveSpeed;
@@ -21,27 +21,29 @@ public class GenVillalobos : MonoBehaviour
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         startPosition = transform.position;
+        Animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
         Horizontal = Input.GetAxisRaw("Horizontal");
-
-        //Animator.SetBool("Corriendo", Horizontal != 0.0f);
-
+        Animator.SetBool("Corriendo", Horizontal != 0.0f);
         if (Horizontal == 1)
         {            
             transform.localScale = new Vector3(1.0f, 1.0f, 10f);
+            
             direction = Vector2.right;
         }
         else if (Horizontal== -1)
         {            
             transform.localScale = new Vector3(-1.0f, 1.0f, 10f);
+            
             direction = Vector2.left;
         }
         else
         {
+            Animator.SetBool("Corriendo", false);
             direction = Vector2.zero;
         }
         float raycastDistance = 0.15f;
@@ -61,10 +63,13 @@ public class GenVillalobos : MonoBehaviour
         Debug.DrawRay(leftRayOrigin, Vector2.down * raycastDistance, Color.red);
         Debug.DrawRay(rightRayOrigin, Vector2.down * raycastDistance, Color.red);
 
-
         if (Input.GetKeyDown(KeyCode.Space) && EnSuelo)
         {
             Jump();
+        }
+        if (!EnSuelo)
+        {
+            Animator.SetBool("Corriendo", false);
         }
     }
 
