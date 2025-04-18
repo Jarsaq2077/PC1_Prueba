@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GenVillalobos : MonoBehaviour
@@ -13,6 +13,9 @@ public class GenVillalobos : MonoBehaviour
     public float moveSpeed;
     private Vector2 direction;
     Vector2 startPosition;
+
+    public LayerMask capaSuelo;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -41,14 +44,24 @@ public class GenVillalobos : MonoBehaviour
         {
             direction = Vector2.zero;
         }
+        float raycastDistance = 0.15f;
 
-        Rigidbody2D.AddForce(direction * moveSpeed * Time.deltaTime * 100);
-        Debug.DrawRay(transform.position, Vector3.down * 0.18f, Color.red);
-        if (Physics2D.Raycast(transform.position, Vector3.down, 0.18f))
-        {
-            EnSuelo = true;
-        }
-        else { EnSuelo = false; }
+        BoxCollider2D box = GetComponent<BoxCollider2D>();
+        float halfWidth = 0.09f;
+        Vector2 center = (Vector2)transform.position + box.offset;
+
+        Vector2 leftRayOrigin = center + Vector2.left * halfWidth;
+        Vector2 rightRayOrigin = center + Vector2.right * halfWidth;
+
+        bool groundedLeft = Physics2D.Raycast(leftRayOrigin, Vector2.down, raycastDistance);
+        bool groundedRight = Physics2D.Raycast(rightRayOrigin, Vector2.down, raycastDistance);
+
+        EnSuelo = groundedLeft || groundedRight;
+
+        Debug.DrawRay(leftRayOrigin, Vector2.down * raycastDistance, Color.red);
+        Debug.DrawRay(rightRayOrigin, Vector2.down * raycastDistance, Color.red);
+
+
         if (Input.GetKeyDown(KeyCode.Space) && EnSuelo)
         {
             Jump();
