@@ -232,7 +232,7 @@ Transform:
   m_GameObject: {fileID: 58395225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.000005049098, y: -0.9999934, z: 0.0033100897, w: 0.0015253566}
-  m_LocalPosition: {x: -3.797, y: -3.805, z: 0.002}
+  m_LocalPosition: {x: -3.5, y: -3.805, z: 0.002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -399,7 +399,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -424,7 +424,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 1.5618386
+  orthographic size: 1.543055
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -449,7 +449,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.3, y: -3.3, z: -10}
+  m_LocalPosition: {x: -1.25, y: -3.08, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -468,6 +468,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 58395225}
+--- !u!1 &682292608
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 682292609}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &682292609
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682292608}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.6722405, y: -3.0741494, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &686926532
 GameObject:
   m_ObjectHideFlags: 0
@@ -5389,9 +5420,9 @@ CompositeCollider2D:
         Y: -45000000
       - X: -3600000
         Y: -44900004
-      - X: -5299999
+      - X: -5300001
         Y: -44900004
-      - X: -5299999
+      - X: -5300001
         Y: -34100004
       - X: -7300000
         Y: -34100004
@@ -5509,8 +5540,8 @@ CompositeCollider2D:
       - {x: -0.35, y: -4.6799707}
       - {x: -0.3500076, y: -4.5099926}
       - {x: -0.3600108, y: -4.5000005}
-      - {x: -0.5299999, y: -4.4999714}
-      - {x: -0.5300292, y: -3.4200003}
+      - {x: -0.5300001, y: -4.4999714}
+      - {x: -0.5300294, y: -3.4200003}
       - {x: -0.73, y: -3.4200296}
       - {x: -0.7300294, y: -3.9600005}
       - {x: -1.25, y: -3.9599712}
@@ -5621,3 +5652,4 @@ SceneRoots:
   - {fileID: 58395228}
   - {fileID: 1439209765}
   - {fileID: 861794285}
+  - {fileID: 682292609}

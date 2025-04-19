@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+
 
 public class GenVillalobos : MonoBehaviour
 {
@@ -93,19 +95,30 @@ public class GenVillalobos : MonoBehaviour
     }
     private void perderVida()
     {
-        vidas = vidas - 1;
+        vidas--;
         if (vidas <= 0)
         {
-            ResetLevel();
+            GameOver(); // Ahora solo carga la escena
+        }
+        else
+        {
+            transform.position = startPosition;
+            Rigidbody2D.linearVelocity = Vector2.zero;
         }
     }
     private void FixedUpdate()
     {
         Rigidbody2D.linearVelocity = new Vector2(Horizontal, Rigidbody2D.linearVelocity.y);
     }
+
+    private void GameOver()
+    {
+        SceneManager.LoadScene("GameOver");
+    }
     private void ResetLevel()
     {
         transform.position = startPosition;
         Rigidbody2D.linearVelocity = Vector2.zero;
+        
     }
 }
