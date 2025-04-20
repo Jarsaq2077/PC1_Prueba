@@ -24,6 +24,7 @@ public class GenVillalobos : MonoBehaviour
         Rigidbody2D = GetComponent<Rigidbody2D>();
         startPosition = transform.position;
         Animator = GetComponent<Animator>();
+        vidas = 3;
     }
 
     // Update is called once per frame
@@ -83,22 +84,22 @@ public class GenVillalobos : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("ZonaMuerta"))
         { 
-           perderVida(); 
+           PerderVida(); 
         }           
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Meta"))
         {
-            ResetLevel();
+            Meta();
         }
     }
-    private void perderVida()
+    private void PerderVida()
     {
         vidas--;
         if (vidas <= 0)
         {
-            GameOver(); // Ahora solo carga la escena
+            GameOver(); // cambia la escena
         }
         else
         {
@@ -114,6 +115,11 @@ public class GenVillalobos : MonoBehaviour
     private void GameOver()
     {
         SceneManager.LoadScene("GameOver");
+    }
+
+    private void Meta()
+    {
+        SceneManager.LoadScene("Llegada");
     }
     private void ResetLevel()
     {
