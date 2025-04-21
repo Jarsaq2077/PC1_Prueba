@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -18,12 +19,17 @@ public class GenVillalobos : MonoBehaviour
 
     public LayerMask capaSuelo;
 
+    public AudioClip sonidoSalto;
+    public AudioClip sonidoMuerte;
+    private AudioSource audioSource;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         startPosition = transform.position;
         Animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         vidas = 3;
     }
 
@@ -72,19 +78,21 @@ public class GenVillalobos : MonoBehaviour
         }
         if (!EnSuelo)
         {
-            Animator.SetBool("Corriendo", false);
+            Animator.SetBool("Corriendo", true);
         }
     }
 
     private void Jump()
     {
         Rigidbody2D.AddForce(Vector2.up*JumpForce);
+        if (sonidoSalto != null) audioSource.PlayOneShot(sonidoSalto);
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("ZonaMuerta"))
-        { 
-           PerderVida(); 
+        {
+            if (sonidoMuerte != null) audioSource.PlayOneShot(sonidoMuerte);
+            PerderVida(); 
         }           
     }
     private void OnTriggerEnter2D(Collider2D collision)

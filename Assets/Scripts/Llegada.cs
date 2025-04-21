@@ -3,19 +3,22 @@ using UnityEngine.SceneManagement;
 
 public class Llegada : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            SceneManager.LoadScene("Principal");
+        }
+    }
+    /*
     void Start()
     {
         Invoke("VolverAJugar", 5f);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     void VolverAJugar()
     {
-        SceneManager.LoadScene("Principal"); // Cambia "Principal" por el nombre exacto de tu escena principal
+        SceneManager.LoadScene("Principal");
     }
+    */
 }
