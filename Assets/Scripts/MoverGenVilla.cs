@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -21,7 +22,12 @@ public class GenVillalobos : MonoBehaviour
 
     public AudioClip sonidoSalto;
     public AudioClip sonidoMuerte;
+    public AudioClip sonidoFondo;
     private AudioSource audioSource;
+
+    public Image[] corazones;
+    public Sprite corazonLleno;
+    public Sprite corazonVacio;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,6 +37,13 @@ public class GenVillalobos : MonoBehaviour
         Animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         vidas = 3;
+        ActualizarVidas();
+        if (sonidoFondo != null)
+        {
+            audioSource.clip = sonidoFondo;
+            audioSource.loop = true;
+            audioSource.Play();
+        }
     }
 
     // Update is called once per frame
@@ -105,6 +118,7 @@ public class GenVillalobos : MonoBehaviour
     private void PerderVida()
     {
         vidas--;
+        ActualizarVidas();
         if (vidas <= 0)
         {
             GameOver(); // cambia la escena
@@ -115,6 +129,21 @@ public class GenVillalobos : MonoBehaviour
             Rigidbody2D.linearVelocity = Vector2.zero;
         }
     }
+    private void ActualizarVidas()
+    {
+        for (int i = 0; i < corazones.Length; i++)
+        {
+            if (i < vidas)
+            {
+                corazones[i].sprite = corazonLleno;
+            }
+            else
+            {
+                corazones[i].sprite = corazonVacio;
+            }
+        }
+    }
+
     private void FixedUpdate()
     {
         Rigidbody2D.linearVelocity = new Vector2(Horizontal, Rigidbody2D.linearVelocity.y);
