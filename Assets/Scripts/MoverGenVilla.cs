@@ -106,7 +106,13 @@ public class GenVillalobos : MonoBehaviour
         {
             if (sonidoMuerte != null) audioSource.PlayOneShot(sonidoMuerte);
             PerderVida(); 
-        }           
+
+        }else if (collision.gameObject.CompareTag("enemigo"))
+        {
+            if (sonidoMuerte != null) audioSource.PlayOneShot(sonidoMuerte);
+            vidas--;
+            ActualizarVidas();
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

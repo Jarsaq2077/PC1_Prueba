@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ZonaMuerta
   - Meta
+  - enemigo
   layers:
   - Default
   - TransparentFX
