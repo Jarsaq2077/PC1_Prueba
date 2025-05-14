@@ -7,16 +7,18 @@ TagManager:
   - ZonaMuerta
   - Meta
   - enemigo
+  - Ground
+  - objeto
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - player
   - Water
   - UI
   - Muerte
-  - 
-  - 
+  - Piso
+  - objetoRecogible
   - 
   - 
   - 

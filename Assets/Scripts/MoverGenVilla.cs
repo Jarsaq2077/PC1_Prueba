@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 
 public class GenVillalobos : MonoBehaviour
@@ -29,9 +30,21 @@ public class GenVillalobos : MonoBehaviour
     public Sprite corazonLleno;
     public Sprite corazonVacio;
 
+    bool esIntangible = false;
+    public float tiempoIntangible = 2f;
+
+    private CapsuleCollider2D capsuleCollider;
+    private BoxCollider2D boxCollider;
+
+    private GameObject objetoRecogido = null;
+    public Transform objetoRecogidoSlot;
+    public LayerMask layerObjetoRecogible;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        capsuleCollider = GetComponent<CapsuleCollider2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
         Rigidbody2D = GetComponent<Rigidbody2D>();
         startPosition = transform.position;
         Animator = GetComponent<Animator>();
@@ -51,6 +64,46 @@ public class GenVillalobos : MonoBehaviour
     {
         Horizontal = Input.GetAxisRaw("Horizontal");
         Animator.SetBool("Corriendo", Horizontal != 0.0f);
+
+        if (Input.GetKeyDown(KeyCode.E) && objetoRecogido == null)
+        {
+            // Lanzamos un Raycast hacia el frente del jugador para detectar el objeto
+            Collider2D[] objetos = Physics2D.OverlapCircleAll(transform.position, 1.0f, layerObjetoRecogible);
+
+            foreach (Collider2D col in objetos)
+            {
+                if (col.CompareTag("objeto"))
+                {
+                    RecogerObjeto(col.gameObject);
+                    break; // solo recoge uno
+                }
+            }
+        }
+
+        // Soltar el objeto si está siendo recogido
+        if (Input.GetKeyDown(KeyCode.Q) && objetoRecogido != null)
+        {
+            SoltarObjeto();
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && objetoRecogido != null && !esIntangible)
+        {
+            Debug.Log("Golpe con objeto recogido");
+
+            GolpeArma golpe = objetoRecogido.GetComponent<GolpeArma>();
+            if (golpe != null)
+            {
+                golpe.ActivarGolpe();
+
+                Collider2D col = objetoRecogido.GetComponent<Collider2D>();
+                if (col != null)
+                {
+                    col.enabled = true;
+                    StartCoroutine(DesactivarColliderTrasGolpe(col));
+                }
+            }
+        }
+
         if (Horizontal == 1)
         {            
             transform.localScale = new Vector3(1.0f, 1.0f, 10f);
@@ -94,7 +147,39 @@ public class GenVillalobos : MonoBehaviour
             Animator.SetBool("Corriendo", true);
         }
     }
+    private void RecogerObjeto(GameObject objeto)
+    {
+        objetoRecogido = objeto;
 
+        // Desactivar la física del objeto (evitar que choque con el jugador)
+        /*Rigidbody2D rb = objetoRecogido.GetComponent<Rigidbody2D>();
+        if (rb != null) rb.simulated = false;*/
+
+        Collider2D col = objetoRecogido.GetComponent<Collider2D>();
+        if (col != null) col.isTrigger = true;
+
+        // Hacer el objeto hijo del jugador
+        objetoRecogido.transform.SetParent(objetoRecogidoSlot);
+        objetoRecogido.transform.localPosition = Vector3.zero; // Ajustar la posición del objeto al lado del jugador
+    }
+
+    private void SoltarObjeto()
+    {
+        // Soltar el objeto
+        objetoRecogido.transform.SetParent(null);
+
+        // Reactivar la física del objeto
+        Rigidbody2D rb = objetoRecogido.GetComponent<Rigidbody2D>();
+        if (rb != null) rb.simulated = true;
+
+        objetoRecogido = null;
+    }
+    private IEnumerator DesactivarColliderTrasGolpe(Collider2D col)
+    {
+        yield return new WaitForSeconds(0.2f);
+        if (col != null)
+            col.enabled = false;
+    }
     private void Jump()
     {
         Rigidbody2D.AddForce(Vector2.up*JumpForce);
@@ -105,13 +190,11 @@ public class GenVillalobos : MonoBehaviour
         if (collision.gameObject.CompareTag("ZonaMuerta"))
         {
             if (sonidoMuerte != null) audioSource.PlayOneShot(sonidoMuerte);
-            PerderVida(); 
+            PerderVida();
 
         }else if (collision.gameObject.CompareTag("enemigo"))
         {
-            if (sonidoMuerte != null) audioSource.PlayOneShot(sonidoMuerte);
-            vidas--;
-            ActualizarVidas();
+            ChoqueEnemigo(collision);
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -120,6 +203,24 @@ public class GenVillalobos : MonoBehaviour
         {
             Meta();
         }
+    }
+    private void ChoqueEnemigo(Collision2D collision)
+    {
+        if (!esIntangible)
+        {
+            if (sonidoMuerte != null) audioSource.PlayOneShot(sonidoMuerte);
+            vidas--;
+            ActualizarVidas();
+            if (vidas <= 0)
+            {
+                GameOver(); // cambia la escena
+            }
+            else
+            {
+                StartCoroutine(HacerIntangibleTemporalmente(collision.collider));
+            }            
+        }
+       
     }
     private void PerderVida()
     {
@@ -149,6 +250,26 @@ public class GenVillalobos : MonoBehaviour
             }
         }
     }
+    private IEnumerator HacerIntangibleTemporalmente(Collider2D enemigoCollider)
+    {
+        esIntangible = true;
+
+        GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+
+        // Ignorar colisiones entre cada collider del jugador y el del enemigo
+        Physics2D.IgnoreCollision(capsuleCollider, enemigoCollider, true);
+        Physics2D.IgnoreCollision(boxCollider, enemigoCollider, true);
+
+        yield return new WaitForSeconds(tiempoIntangible);
+
+        // Volver a activar la colisión
+        Physics2D.IgnoreCollision(capsuleCollider, enemigoCollider, false);
+        Physics2D.IgnoreCollision(boxCollider, enemigoCollider, false);
+
+        GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1f);
+
+        esIntangible = false;
+    }
 
     private void FixedUpdate()
     {
@@ -170,4 +291,5 @@ public class GenVillalobos : MonoBehaviour
         Rigidbody2D.linearVelocity = Vector2.zero;
         
     }
+
 }
