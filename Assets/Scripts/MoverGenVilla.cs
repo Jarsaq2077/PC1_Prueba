@@ -40,6 +40,8 @@ public class GenVillalobos : MonoBehaviour
     public Transform objetoRecogidoSlot;
     public LayerMask layerObjetoRecogible;
 
+    public bool haskey = false;
+    private Vector3 posicionObjInicial;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -74,7 +76,7 @@ public class GenVillalobos : MonoBehaviour
             {
                 if (col.CompareTag("objeto"))
                 {
-                    RecogerObjeto(col.gameObject);
+                    RecogerObjeto(col.gameObject);                    
                     break; // solo recoge uno
                 }
             }
@@ -151,19 +153,25 @@ public class GenVillalobos : MonoBehaviour
     {
         objetoRecogido = objeto;
 
+        GolpeArma golpe = objetoRecogido.GetComponent<GolpeArma>();
+        if (golpe != null)
+        {
+            golpe.GuardarPosicionInicial(); // Guarda dónde estaba originalmente
+        }
         // Desactivar la física del objeto (evitar que choque con el jugador)
         /*Rigidbody2D rb = objetoRecogido.GetComponent<Rigidbody2D>();
         if (rb != null) rb.simulated = false;*/
 
         Collider2D col = objetoRecogido.GetComponent<Collider2D>();
         if (col != null) col.isTrigger = true;
+        haskey = true;
 
         // Hacer el objeto hijo del jugador
         objetoRecogido.transform.SetParent(objetoRecogidoSlot);
         objetoRecogido.transform.localPosition = Vector3.zero; // Ajustar la posición del objeto al lado del jugador
     }
 
-    private void SoltarObjeto()
+    public void SoltarObjeto()
     {
         // Soltar el objeto
         objetoRecogido.transform.SetParent(null);
@@ -172,6 +180,7 @@ public class GenVillalobos : MonoBehaviour
         Rigidbody2D rb = objetoRecogido.GetComponent<Rigidbody2D>();
         if (rb != null) rb.simulated = true;
 
+        haskey = false;
         objetoRecogido = null;
     }
     private IEnumerator DesactivarColliderTrasGolpe(Collider2D col)
@@ -199,7 +208,7 @@ public class GenVillalobos : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Meta"))
+        if (collision.gameObject.CompareTag("Meta") && haskey)
         {
             Meta();
         }
@@ -270,12 +279,12 @@ public class GenVillalobos : MonoBehaviour
 
         esIntangible = false;
     }
-
+  
     private void FixedUpdate()
     {
         Rigidbody2D.linearVelocity = new Vector2(Horizontal, Rigidbody2D.linearVelocity.y);
     }
-
+  
     private void GameOver()
     {
         SceneManager.LoadScene("GameOver");
