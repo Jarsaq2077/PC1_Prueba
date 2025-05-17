@@ -7,10 +7,15 @@ public class GolpeArma : MonoBehaviour
     [SerializeField] float duracionGolpe = 2.0f;
     public GenVillalobos player;
     private Vector3 posicionObjInicial;
+    private Animator animator;
+    private float tiempoEspera;
     public void ActivarGolpe()
-    {
+    {        
         puedeGolpear = true;
-
+        animator = GetComponent<Animator>();
+        tiempoEspera = 1.0f;
+        animator.SetBool("golpe", true);        
+        StartCoroutine(DesactivarsGolpe(tiempoEspera));
         //StartCoroutine(DesactivarTrasTiempo());
     }
 
@@ -24,9 +29,11 @@ public class GolpeArma : MonoBehaviour
      {
         if (puedeGolpear && collision.CompareTag("enemigo"))
         {
+            tiempoEspera = 0.5f;
             Destroy(collision.gameObject);
-            player.SoltarObjeto();
-            transform.position = posicionObjInicial;
+            animator.SetBool("ruptura", true);            
+            StartCoroutine(DestruirObjeto(tiempoEspera));                      
+            /*transform.position = posicionObjInicial;
             transform.SetParent(null);
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             if (rb != null)
@@ -40,10 +47,22 @@ public class GolpeArma : MonoBehaviour
                 col.isTrigger = false;
                 col.enabled = true;
             }
-            // Volver a la posici�n original
-            
-            puedeGolpear = false;
+            // Volver a la posici�n original*/
+                       
         }
+        puedeGolpear = false;
+    }
+    private IEnumerator DesactivarsGolpe(float tiempoEspera)
+    {
+        yield return new WaitForSeconds(tiempoEspera);
+        puedeGolpear = false;
+        animator.SetBool("golpe", false);
+    }
+    private IEnumerator DestruirObjeto(float tiempoEspera)
+    {
+        yield return new WaitForSeconds(tiempoEspera);
+        Destroy(gameObject);
+        animator.SetBool("ruptura", false);
     }
     public void GuardarPosicionInicial()
     {

@@ -9,6 +9,8 @@ TagManager:
   - enemigo
   - Ground
   - objeto
+  - arma
+  - puerta
   layers:
   - Default
   - TransparentFX

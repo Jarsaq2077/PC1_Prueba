@@ -1,10 +1,25 @@
 fileFormatVersion: 2
-guid: 986e2afbbd785ee47b1c284bd22fd20f
+guid: 3d21225a58943fe43a232bf29cf7e022
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: 8364613589103295362
     second: tilemap-sword_0
+  - first:
+      213: -640139328503134634
+    second: tilemap-sword_1
+  - first:
+      213: -8973733598482603122
+    second: tilemap-sword_2
+  - first:
+      213: 6456644081772311655
+    second: tilemap-sword_3
+  - first:
+      213: -1635250631089068675
+    second: tilemap-sword_4
+  - first:
+      213: -3912334923800991872
+    second: tilemap-sword_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -116,12 +131,12 @@ TextureImporter:
       name: tilemap-sword_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1600
-        height: 640
+        x: 3
+        y: 68
+        width: 12
+        height: 21
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -134,11 +149,121 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: tilemap-sword_1
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 68
+        width: 17
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65640dd1ca4cd17f0800000000000000
+      internalID: -640139328503134634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tilemap-sword_2
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 63
+        width: 21
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e83e47946d4e67380800000000000000
+      internalID: -8973733598482603122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tilemap-sword_3
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 51
+        width: 21
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 764ba27659b9a9950800000000000000
+      internalID: 6456644081772311655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tilemap-sword_4
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 47
+        width: 26
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d75e337073c6e49e0800000000000000
+      internalID: -1635250631089068675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tilemap-sword_5
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 2
+        width: 12
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 087ac708d1894b9c0800000000000000
+      internalID: -3912334923800991872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 2cbba14025c01ac419e82b0b83ac3f81
     internalID: 0
     vertices: []
     indices: 
@@ -149,6 +274,11 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       tilemap-sword_0: 8364613589103295362
+      tilemap-sword_1: -640139328503134634
+      tilemap-sword_2: -8973733598482603122
+      tilemap-sword_3: 6456644081772311655
+      tilemap-sword_4: -1635250631089068675
+      tilemap-sword_5: -3912334923800991872
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
