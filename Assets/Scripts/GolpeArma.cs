@@ -1,5 +1,9 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Audio;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 
 public class GolpeArma : MonoBehaviour
 {
@@ -10,6 +14,8 @@ public class GolpeArma : MonoBehaviour
     private Animator animator;
     private float tiempoEspera;
     [SerializeField] int contadorEnemigos = 1;
+    public AudioClip sonidoGolpe;
+    private AudioSource audioSource;
     public void ActivarGolpe()
     {        
         puedeGolpear = true;
@@ -29,7 +35,8 @@ public class GolpeArma : MonoBehaviour
      private void OnTriggerEnter2D(Collider2D collision)
      {
         if (puedeGolpear && collision.CompareTag("enemigo"))
-        {            
+        {
+            
             Destroy(collision.gameObject);
             contadorEnemigos--;
             if(contadorEnemigos <= 0)
