@@ -43,6 +43,9 @@ public class GenVillalobos : MonoBehaviour
     public bool haskey = false;
     private Vector3 posicionObjInicial;
     [SerializeField] GameObject puerta;
+    [SerializeField] GameObject deadEnd;
+    [SerializeField] GameObject enemigoSorpresa;
+    public bool hasfake = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -71,15 +74,12 @@ public class GenVillalobos : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && objetoRecogido == null)
         {
             // Lanzamos un Raycast hacia el frente del jugador para detectar el objeto
-            Collider2D[] objetos = Physics2D.OverlapCircleAll(transform.position, 1.0f, layerObjetoRecogible);
+            Collider2D[] objetos = Physics2D.OverlapCircleAll(transform.position, 0.5f, layerObjetoRecogible);
 
             foreach (Collider2D col in objetos)
             {
-                if (col.CompareTag("objeto"))
-                {
-                    RecogerObjeto(col.gameObject);                    
-                    break; // solo recoge uno
-                }else if (col.CompareTag("arma"))
+                Debug.Log("Objeto detectado: " + col.name + " | Tag: " + col.tag);
+                if (col.CompareTag("objeto") || col.CompareTag("llave") || col.CompareTag("arma") || col.CompareTag("tesoroFalso"))
                 {
                     RecogerObjeto(col.gameObject);
                     break;
@@ -157,13 +157,17 @@ public class GenVillalobos : MonoBehaviour
     private void RecogerObjeto(GameObject objeto)
     {
         objetoRecogido = objeto;
-        if(objeto.CompareTag("objeto"))
+        if(objeto.CompareTag("llave"))
         {
             haskey = true;
-        }       
-        // Desactivar la física del objeto (evitar que choque con el jugador)
-        /*Rigidbody2D rb = objetoRecogido.GetComponent<Rigidbody2D>();
-        if (rb != null) rb.simulated = false;*/
+        }
+        if (objeto.CompareTag("tesoroFalso"))
+        {
+            hasfake = true;
+        }
+        
+        Rigidbody2D rb = objetoRecogido.GetComponent<Rigidbody2D>();
+        if (rb != null) rb.simulated = false;
 
         Collider2D col = objetoRecogido.GetComponent<Collider2D>();
         if (col != null) col.isTrigger = true;        
@@ -181,6 +185,9 @@ public class GenVillalobos : MonoBehaviour
         // Reactivar la física del objeto
         Rigidbody2D rb = objetoRecogido.GetComponent<Rigidbody2D>();
         if (rb != null) rb.simulated = true;
+
+        Collider2D col = objetoRecogido.GetComponent<Collider2D>();
+        if (col != null) { col.enabled = true; col.isTrigger = false; }
 
         haskey = false;
         objetoRecogido = null;
@@ -203,20 +210,39 @@ public class GenVillalobos : MonoBehaviour
             if (sonidoMuerte != null) audioSource.PlayOneShot(sonidoMuerte);
             PerderVida();
 
-        }else if (collision.gameObject.CompareTag("enemigo"))
+        } else if (collision.gameObject.CompareTag("enemigo"))
         {
             ChoqueEnemigo(collision);
+        } else if (collision.gameObject.CompareTag("surprise"))
+        {
+            BadEnd();
         }
+        
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Meta") )
         {
             Meta();
-        }else if (collision.gameObject.CompareTag("puerta") && haskey)
+        }else if (collision.gameObject.CompareTag("fin"))
+        {
+            fin();
+        }
+        else if (collision.gameObject.CompareTag("puerta") && haskey)
         {
             Debug.Log("subiendo puerta");
+            Destroy(objetoRecogido);
             StartCoroutine(SubirPuerta());
+            haskey = false;
+        }else if (collision.gameObject.CompareTag("deadEnd") && hasfake)
+        {
+            Collider2D col = deadEnd.GetComponent<Collider2D>();
+            if (col != null) { col.enabled = true; col.isTrigger = false; }
+        }else if (collision.gameObject.CompareTag("surprise") && hasfake)
+        {
+            Debug.Log("Sorpresita");
+            StartCoroutine(BajarEnemigo(enemigoSorpresa, this.transform));
+
         }
     }
     private void ChoqueEnemigo(Collision2D collision)
@@ -294,6 +320,10 @@ public class GenVillalobos : MonoBehaviour
     {
         SceneManager.LoadScene("GameOver");
     }
+    private void BadEnd()
+    {
+        SceneManager.LoadScene("BadEnd");
+    }
     private IEnumerator SubirPuerta()
     {
         float alturaObjetivo = puerta.transform.position.y + 3.0f;
@@ -307,7 +337,27 @@ public class GenVillalobos : MonoBehaviour
         Vector3 pos = puerta.transform.position;
         puerta.transform.position = new Vector3(pos.x, alturaObjetivo, pos.z);
     }
+    private IEnumerator BajarEnemigo(GameObject enemigoSorpresa, Transform jugador)
+    {
+        //float alturaInicio = 1.0f; // Altura desde donde cae el enemigo
+        float velocidadCaida = 0.5f;
+
+        Vector3 destino = new Vector3(jugador.position.x, jugador.position.y, enemigoSorpresa.transform.position.z);
+
+        
+        while (enemigoSorpresa.transform.position.y > destino.y)
+        {
+            enemigoSorpresa.transform.position -= new Vector3(0, velocidadCaida * Time.deltaTime, 0);
+            yield return null;
+        }
+
+        
+    }
     private void Meta()
+    {
+        SceneManager.LoadScene("Nivel 2");
+    }
+    private void fin()
     {
         SceneManager.LoadScene("Llegada");
     }

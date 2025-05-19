@@ -9,12 +9,13 @@ public class GolpeArma : MonoBehaviour
     private Vector3 posicionObjInicial;
     private Animator animator;
     private float tiempoEspera;
+    [SerializeField] int contadorEnemigos = 1;
     public void ActivarGolpe()
     {        
         puedeGolpear = true;
         animator = GetComponent<Animator>();
-        tiempoEspera = 1.0f;
-        animator.SetBool("golpe", true);        
+        tiempoEspera = duracionGolpe;
+        animator.SetBool("golpe", true);
         StartCoroutine(DesactivarsGolpe(tiempoEspera));
         //StartCoroutine(DesactivarTrasTiempo());
     }
@@ -28,11 +29,15 @@ public class GolpeArma : MonoBehaviour
      private void OnTriggerEnter2D(Collider2D collision)
      {
         if (puedeGolpear && collision.CompareTag("enemigo"))
-        {
-            tiempoEspera = 0.5f;
+        {            
             Destroy(collision.gameObject);
-            animator.SetBool("ruptura", true);            
-            StartCoroutine(DestruirObjeto(tiempoEspera));                      
+            contadorEnemigos--;
+            if(contadorEnemigos <= 0)
+            {
+                tiempoEspera = 0.5f;
+                animator.SetBool("ruptura", true);
+                StartCoroutine(DestruirObjeto(tiempoEspera));
+            }                             
             /*transform.position = posicionObjInicial;
             transform.SetParent(null);
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
@@ -50,7 +55,6 @@ public class GolpeArma : MonoBehaviour
             // Volver a la posici�n original*/
                        
         }
-        puedeGolpear = false;
     }
     private IEnumerator DesactivarsGolpe(float tiempoEspera)
     {

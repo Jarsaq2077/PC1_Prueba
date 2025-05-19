@@ -19,6 +19,13 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
         transform.position = Vector3.MoveTowards(transform.position, wayPoints[siguientePosicion].transform.position, speed * Time.deltaTime);
+        if (siguientePosicion == 1)
+        {
+            transform.localScale = new Vector3(-1.0f, 1.0f, 10f);
+        }else
+        {
+            transform.localScale = new Vector3(1.0f, 1.0f, 10f);
+        }
         if (Vector3.Distance(transform.position, wayPoints[siguientePosicion].transform.position) < distanciaCambio){
             siguientePosicion++;
             if(siguientePosicion >= wayPoints.Count)
@@ -26,6 +33,7 @@ public class EnemyMovement : MonoBehaviour
                 siguientePosicion = 0;
             }
         }
+        
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 5f);
         if (hit.collider != null)
         {

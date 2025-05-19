@@ -11,6 +11,11 @@ TagManager:
   - objeto
   - arma
   - puerta
+  - llave
+  - tesoroFalso
+  - deadEnd
+  - surprise
+  - fin
   layers:
   - Default
   - TransparentFX
