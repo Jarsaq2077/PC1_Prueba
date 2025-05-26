@@ -110,7 +110,34 @@ public class GenVillalobos : MonoBehaviour
                 }
             }
         }
+        if (Horizontal > 0)
+        {
+            transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+        else if (Horizontal < 0)
+        {
+            transform.localScale = new Vector3(-1f, 1f, 1f);
+        }
 
+        float maxRotationAngle = 10f;
+        float walkFrequency = 5f;
+        float rotationZ = 0f;
+
+        if (Horizontal != 0)
+        {
+            rotationZ = Mathf.Sin(Time.time * walkFrequency) * maxRotationAngle;
+
+            if (transform.localScale.x < 0)
+                rotationZ = -rotationZ;
+        }
+        else
+        {
+            rotationZ = 0f;
+        }
+
+        Quaternion targetRotation = Quaternion.Euler(0, 0, rotationZ);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        /*
         if (Horizontal == 1)
         {            
             transform.localScale = new Vector3(1.0f, 1.0f, 10f);
@@ -127,7 +154,7 @@ public class GenVillalobos : MonoBehaviour
         {
             Animator.SetBool("Corriendo", false);
             direction = Vector2.zero;
-        }
+        }*/
         float raycastDistance = 0.15f;
 
         BoxCollider2D box = GetComponent<BoxCollider2D>();
