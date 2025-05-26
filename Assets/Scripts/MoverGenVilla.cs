@@ -265,7 +265,13 @@ public class GenVillalobos : MonoBehaviour
         {
             Collider2D col = deadEnd.GetComponent<Collider2D>();
             if (col != null) { col.enabled = true; col.isTrigger = false; }
-        }else if (collision.gameObject.CompareTag("surprise") && hasfake)
+            SpriteRenderer sr = deadEnd.GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                sr.enabled = true; // Activa la visualización del sprite
+            }
+        }
+        else if (collision.gameObject.CompareTag("surprise") && hasfake)
         {
             Debug.Log("Sorpresita");
             StartCoroutine(BajarEnemigo(enemigoSorpresa, this.transform));
