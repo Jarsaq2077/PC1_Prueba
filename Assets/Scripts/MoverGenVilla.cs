@@ -251,9 +251,13 @@ public class GenVillalobos : MonoBehaviour
         if (collision.gameObject.CompareTag("Meta") )
         {
             Meta();
-        }else if (collision.gameObject.CompareTag("fin"))
+        }else if (collision.gameObject.CompareTag("nivel3"))
         {
-            fin();
+            gotonivel3();
+        }
+        else if (collision.gameObject.CompareTag("fin"))
+        {
+            gotoFin();
         }
         else if (collision.gameObject.CompareTag("puerta") && haskey)
         {
@@ -390,10 +394,15 @@ public class GenVillalobos : MonoBehaviour
     {
         SceneManager.LoadScene("Nivel 2");
     }
-    private void fin()
+    private void gotonivel3()
+    {
+        SceneManager.LoadScene("Nivel 3");
+    }
+    private void gotoFin()
     {
         SceneManager.LoadScene("Llegada");
     }
+
     private void ResetLevel()
     {
         transform.position = startPosition;

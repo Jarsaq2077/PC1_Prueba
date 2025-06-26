@@ -16,6 +16,7 @@ TagManager:
   - deadEnd
   - surprise
   - fin
+  - nivel3
   layers:
   - Default
   - TransparentFX

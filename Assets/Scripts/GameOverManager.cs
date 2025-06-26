@@ -20,7 +20,7 @@ public class GameOverManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            SceneManager.LoadScene("Principal");
+            SceneManager.LoadScene("UI_Menu");
         }
     }
     /*
