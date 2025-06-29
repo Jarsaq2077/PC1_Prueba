@@ -79,7 +79,7 @@ public class GenVillalobos : MonoBehaviour
             foreach (Collider2D col in objetos)
             {
                 Debug.Log("Objeto detectado: " + col.name + " | Tag: " + col.tag);
-                if (col.CompareTag("objeto") || col.CompareTag("llave") || col.CompareTag("arma") || col.CompareTag("tesoroFalso"))
+                if (col.CompareTag("objeto") || col.CompareTag("llave") || col.CompareTag("arma") || col.CompareTag("tesoroFalso") || col.CompareTag("bomba"))
                 {
                     RecogerObjeto(col.gameObject);
                     break;
@@ -180,7 +180,15 @@ public class GenVillalobos : MonoBehaviour
         {
             Animator.SetBool("Corriendo", true);
         }
+
+        
+
+
     }
+
+
+
+
     private void RecogerObjeto(GameObject objeto)
     {
         objetoRecogido = objeto;
@@ -204,21 +212,46 @@ public class GenVillalobos : MonoBehaviour
         objetoRecogido.transform.localPosition = Vector3.zero; // Ajustar la posición del objeto al lado del jugador
     }
 
+    //private float fuerzaLanzamiento = 0;
+    //private float fuerzaVertical = 0;
+
     public void SoltarObjeto()
     {
-        // Soltar el objeto
         objetoRecogido.transform.SetParent(null);
 
-        // Reactivar la física del objeto
         Rigidbody2D rb = objetoRecogido.GetComponent<Rigidbody2D>();
-        if (rb != null) rb.simulated = true;
+        if (rb == null)
+            rb = objetoRecogido.GetComponentInChildren<Rigidbody2D>();
+
+        if (rb != null)
+        {
+            rb.simulated = true;
+
+            float direccion = transform.localScale.x > 0 ? 1f : -1f; // derecha o izquierda según el jugador
+            Vector2 fuerza = new Vector2(1, 1);
+
+            rb.linearVelocity = fuerza;  // O puedes usar AddForce con ForceMode2D.Impulse si quieres otro efecto
+
+            Debug.Log("Soltando bomba con fuerza: " + fuerza);
+        }
 
         Collider2D col = objetoRecogido.GetComponent<Collider2D>();
-        if (col != null) { col.enabled = true; col.isTrigger = false; }
+        if (col != null)
+        {
+            col.enabled = true;
+            col.isTrigger = false;
+        }
 
-        haskey = false;
+        Bomba bomba = objetoRecogido.GetComponent<Bomba>();
+        if (bomba != null)
+        {
+            bomba.IniciarCuentaAtras();
+        }
+
         objetoRecogido = null;
     }
+
+
     private IEnumerator DesactivarColliderTrasGolpe(Collider2D col)
     {
         yield return new WaitForSeconds(0.2f);

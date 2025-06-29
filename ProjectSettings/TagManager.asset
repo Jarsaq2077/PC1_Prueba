@@ -17,6 +17,7 @@ TagManager:
   - surprise
   - fin
   - nivel3
+  - bomba
   layers:
   - Default
   - TransparentFX
