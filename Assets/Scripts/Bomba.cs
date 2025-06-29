@@ -11,12 +11,17 @@ public class Bomba : MonoBehaviour
     [SerializeField] private float tiempoParaAnimacion = 2f;
     [SerializeField] private float duracionAnimacion = 1.5f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip sonidoExplosion;
+    private AudioSource audioSource;
+
     private Animator animator;
     private bool yaExplotando = false;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void IniciarCuentaAtras()
@@ -30,21 +35,32 @@ public class Bomba : MonoBehaviour
 
     private void IniciarAnimacionExplosion()
     {
+        // 🔥 Activar animación
         if (animator != null)
         {
             animator.SetTrigger("Explode");
         }
 
+        // 🔊 Reproducir sonido al mismo tiempo
+        if (audioSource != null && sonidoExplosion != null)
+        {
+            audioSource.PlayOneShot(sonidoExplosion);
+        }
+
+        // ⏳ Luego de la animación, hacer la explosión lógica
         Invoke(nameof(HacerExplosion), duracionAnimacion);
     }
 
     private void HacerExplosion()
     {
-        Collider2D[] enemigos = Physics2D.OverlapCircleAll(transform.position, radioExplosion, layerEnemigos);
-        foreach (Collider2D enemigo in enemigos)
+        Collider2D[] objetos = Physics2D.OverlapCircleAll(transform.position, radioExplosion);
+
+        foreach (Collider2D objeto in objetos)
         {
-            Debug.Log("Enemigo destruido: " + enemigo.name);
-            Destroy(enemigo.gameObject);
+            if (objeto.CompareTag("enemigo"))
+            {
+                Destroy(objeto.gameObject);
+            }
         }
 
         if (efectoExplosion != null)
@@ -54,6 +70,7 @@ public class Bomba : MonoBehaviour
 
         Destroy(gameObject);
     }
+
 
     private void OnDrawGizmosSelected()
     {
