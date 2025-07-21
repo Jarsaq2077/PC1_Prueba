@@ -11,6 +11,7 @@ public class GolpeArma : MonoBehaviour
     [SerializeField] float duracionGolpe = 2.0f;
     public GenVillalobos player;
     private Vector3 posicionObjInicial;
+    public BossEsqueletor bossf;
     private Animator animator;
     private float tiempoEspera;
     [SerializeField] int contadorEnemigos = 1;
@@ -61,6 +62,11 @@ public class GolpeArma : MonoBehaviour
             }
             // Volver a la posici�n original*/
                        
+        
+        }else if (puedeGolpear && collision.CompareTag("boss"))
+        {
+            bossf.recibirDanio();
+            Debug.Log("¡Jefe golpeado!");
         }
     }
     private IEnumerator DesactivarsGolpe(float tiempoEspera)

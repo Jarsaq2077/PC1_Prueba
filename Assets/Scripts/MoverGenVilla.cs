@@ -346,7 +346,7 @@ public class GenVillalobos : MonoBehaviour
             ResetLevel();
         }
     }
-    private void ActualizarVidas()
+    public void ActualizarVidas()
     {
         for (int i = 0; i < corazones.Length; i++)
         {
