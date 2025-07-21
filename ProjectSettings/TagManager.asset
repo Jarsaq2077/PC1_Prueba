@@ -18,6 +18,8 @@ TagManager:
   - fin
   - nivel3
   - bomba
+  - boss
+  - bossfinal
   layers:
   - Default
   - TransparentFX

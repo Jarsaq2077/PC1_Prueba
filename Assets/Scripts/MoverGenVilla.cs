@@ -288,6 +288,10 @@ public class GenVillalobos : MonoBehaviour
         {
             gotonivel3();
         }
+        else if (collision.gameObject.CompareTag("bossfinal"))
+        {
+            gotobossfinal();
+        }
         else if (collision.gameObject.CompareTag("fin"))
         {
             gotoFin();
@@ -430,6 +434,10 @@ public class GenVillalobos : MonoBehaviour
     private void gotonivel3()
     {
         SceneManager.LoadScene("Nivel 3");
+    }
+    private void gotobossfinal()
+    {
+        SceneManager.LoadScene("BossFight");
     }
     private void gotoFin()
     {

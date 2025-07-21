@@ -16,6 +16,7 @@ public class BossEsqueletor : MonoBehaviour
     [SerializeField] float distanciaCambio = 0.2f;
     [SerializeField] float offsetAlSuelo = 0.5f;
     [SerializeField] int vidas;
+    bool puedeMoverse;
     bool yagolpeo;
     bool ataqueActivo;
     public Collider2D colliderAtaque;
@@ -25,39 +26,44 @@ public class BossEsqueletor : MonoBehaviour
     {
         Animator = GetComponent<Animator>();
         colliderAtaque.enabled = false;
+        puedeMoverse = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, wayPoints[siguientePosicion].transform.position, speed * Time.deltaTime);
-        if (siguientePosicion == 1)
+        if (puedeMoverse)
         {
-            transform.localScale = new Vector3(-1.0f, 1.0f, 10f);
-        }
-        else
-        {
-            transform.localScale = new Vector3(1.0f, 1.0f, 10f);
-        }
-        if (Vector3.Distance(transform.position, wayPoints[siguientePosicion].transform.position) < distanciaCambio)
-        {
-            siguientePosicion++;
-            if (siguientePosicion >= wayPoints.Count)
+            transform.position = Vector3.MoveTowards(transform.position, wayPoints[siguientePosicion].transform.position, speed * Time.deltaTime);
+            if (siguientePosicion == 1)
             {
-                siguientePosicion = 0;
+                transform.localScale = new Vector3(-1.0f, 1.0f, 10f);
             }
-        }
+            else
+            {
+                transform.localScale = new Vector3(1.0f, 1.0f, 10f);
+            }
+            if (Vector3.Distance(transform.position, wayPoints[siguientePosicion].transform.position) < distanciaCambio)
+            {
+                siguientePosicion++;
+                if (siguientePosicion >= wayPoints.Count)
+                {
+                    siguientePosicion = 0;
+                }
+            }
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 5f);
-        if (hit.collider != null)
-        {
-            if (hit.collider.CompareTag("Ground") || hit.collider.name.ToLower().Contains("suelo"))
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 5f);
+            if (hit.collider != null)
             {
-                Vector3 nuevaPos = transform.position;
-                nuevaPos.y = hit.point.y + offsetAlSuelo;
-                transform.position = nuevaPos;
+                if (hit.collider.CompareTag("Ground") || hit.collider.name.ToLower().Contains("suelo"))
+                {
+                    Vector3 nuevaPos = transform.position;
+                    nuevaPos.y = hit.point.y + offsetAlSuelo;
+                    transform.position = nuevaPos;
+                }
             }
         }
+        
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -94,7 +100,7 @@ public class BossEsqueletor : MonoBehaviour
             player.ActualizarVidas();
             if (player.vidas <= 0)
             {
-                SceneManager.LoadScene("GameOver");
+                SceneManager.LoadScene("BadEnd2");
             }
             yagolpeo = true;
         }
@@ -104,6 +110,7 @@ public class BossEsqueletor : MonoBehaviour
         if (vidas <= 0)
         {
             Animator.SetBool("dead", true);
+            puedeMoverse = false;
             StartCoroutine(EsperarAntesDeMorir());
         }
         else
@@ -122,8 +129,9 @@ public class BossEsqueletor : MonoBehaviour
     private IEnumerator EsperarAntesDeMorir()
     {
         yield return new WaitForSeconds(3.0f);
-        SceneManager.LoadScene("Llegada");
+        
         Destroy(gameObject);
+        SceneManager.LoadScene("Llegada");
     }
 }
 
